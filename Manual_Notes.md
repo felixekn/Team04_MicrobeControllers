@@ -9,7 +9,20 @@ Use ```hostname --short``` to display short hostname
 Use ```hostname -i``` to display the IP address
 ### pwd
 Print the current working directory
-### Uptime
+### uptime
 Displays the amount of time the Pi has been on
-### Python
+### python
 Use ```python --version``` to determine python version
+### ping
+Use ```ping url``` to ping a website
+### whereis
+Use to display the location of a command, such as ```whereis man```
+### cat
+Opens a short text file, example: ```cat /proc/cpuinfo```
+### raspistill
+Controls the raspberry's camera
+### crontab
+Used to schedule the firig of commands perodically
+http://kvz.io/blog/2007/07/29/schedule-tasks-on-linux-using-crontab/
+### top
+displays currently active commands and their resource usage
