@@ -38,40 +38,68 @@ sudo shutdown
 # Lab 2 Notes
 ### echo
 Prints what was written in the command line after submission
-
 ### cat
 prints out contents of file as well as concatinates files, strings, variables, etc
-
 ### wc
 Prints out total number of words (-w) or total number of characters in bites (-c)
-
 ### >
 creates new file or rewrites selected file
 e.g. echo "Hello world!" > hi.txt
-
 ### >>
 Creates file from echo if file does not yet exist, appends if file exists
-
-### ls la
-gives file infromation in bites
-
+### ls -la
+gives file infromation in bites, prints hidden files/non text files
 ### head and tail
 prints either the first 10 or last line 10, respectively, of a file
-#### -[1-10]
-prints the 1st, 2nd, 3rd...10th line of head or last
+-[1-10] prints the 1st, 2nd, 3rd...10th line of head or last
 -1 = first line, -3 = third lien
-
 ### more
 prints contents of file to fill screen and allows for scrolling to additional lines of the file using the arrow keys
-
 ### |
 suppresses data stream (does not print to screen) but allows functions to act on the stream.
 Example: more hi.txt | grep hi  returns all instances containing the characters "hi"
-
 ### grep
 find
-
-### n
+### -n
 prints line number
+### wget
+access a website
+#### -q
+quites output of wget
+#### -qO-
+prevents from saving to a disk
+### tee
+Outputs standard output and writes result to a file
+e.g. ifconfi | cat -n | grep "inet addr" | tee specific_line_in_ifconfi.txt
+### cp
+Copies from a file to a new file
+e.g. cp hi.txt new_file.txt
+### id -u
+Prints user specific information
+### nano
+onboard text editor
+### raspistill
+activates camera
+-o output filename
+-v verbose output: gives you detailed information on photo captured
+### opt-get
+the downloader or package manager for linux
+### fbi
+image viewer
+e.g. fbi smile.jpg
+-a autozoom
+-d framebuffer of device
+-vf vertical flip
+-hf horizontal flip
+-v be verbose, status line on bottom of prompt
+-noverbose
+-t time in secomds (e.g. -t 1 equates to a picture per second slide show on repeat)
+### raspivid
+takes video with camera
+-o specifies output file
+### omxplayer
+video player
+-o specifies out type (e.g. hdmi)
+### 2>&1
+pipes standard error (stderr) to standards output (stdout)
 
-###
