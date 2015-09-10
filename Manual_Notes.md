@@ -103,3 +103,28 @@ video player
 ### 2>&1
 pipes standard error (stderr) to standards output (stdout)
 
+### grep
+
+global regular expression print
+
+Searchs an input file for a string and prints lines which match it
+````
+grep string filepath
+````
+
+-n Shows line numbers  
+-v Gives negative results instead of positive results  
+-vn Gives negative results and line numbers  
+-c only prints number of lines matched  
+-l only prints filesnames of files which contain the string  
+-i ignores case when searching  
+-x Searchs for exact matches only
+-A# Display additional lines following the line in which the match was made
+
+####REGEXP
+You can include regular expressions in your grep queries  
+-E also use of extended regexp commands  
+$ is end of line  
+? matchs 1 or 0 occurences of the previous character  
+| seperates two search strings with or functionality, eg. string1|string2  
+\ escapes a special character allowing it to be searched for. Use 'single quotes' when using this character.
