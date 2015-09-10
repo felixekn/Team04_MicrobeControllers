@@ -128,3 +128,24 @@ $ is end of line
 ? matchs 1 or 0 occurences of the previous character  
 | seperates two search strings with or functionality, eg. string1|string2  
 \ escapes a special character allowing it to be searched for. Use 'single quotes' when using this character.
+
+###AWK
+A text pattern scanning and processing language. read here fo rmore info http://www-users.york.ac.uk/~mijp1/teaching/2nd_year_Comp_Lab/guides/grep_awk_sed.pdf
+````
+BEGIN { …. initialization awk commands …}
+{ …. awk commands for each line of the file…}
+END { …. finalization awk commands …}
+````
+Example which prints every third file using a for loop and getline to iterate  
+````
+ls -l | awk '{for (i=1;i<3;i++) {getline}; print NR,$0}'
+````
+Uses the following control statements:
+-  if (condition) statement [ else statement ]
+-  while (condition) statement
+-  do statement while (condition)
+-  for (expr1; expr2; expr3) statement
+-  for (var in array) statement
+-  break
+-  continue
+-  exit [ expression ]
