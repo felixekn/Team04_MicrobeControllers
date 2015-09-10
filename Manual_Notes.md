@@ -65,7 +65,7 @@ prints line number
 ### wget
 access a website
 #### -q
-quites output of wget
+quietes output of wget
 #### -qO-
 prevents from saving to a disk
 ### tee
@@ -102,6 +102,12 @@ video player
 -o specifies out type (e.g. hdmi)
 ### 2>&1
 pipes standard error (stderr) to standards output (stdout)
+
+#CHMOD
+```
+CHMOD +x filename
+````
+Use this command to make a file execuable
 
 ### grep
 
@@ -149,3 +155,9 @@ Uses the following control statements:
 -  break
 -  continue
 -  exit [ expression ]
+-  
+Example, find PMIDs from PubMed records:
+````
+awk '{if($1=="PMID-"){print $2}}' tsien.txt > tsien_PMIDs.txt
+````
+
