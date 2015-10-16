@@ -29,7 +29,8 @@ A device capable of quickly measuring the OD600 of a culture tube
   
 #Project Title: 
 **Rapid OD Detector (RODD)**
-###Rough Project Description
+
+#Rough Project Description
 Develop a portable/small optical density (OD) measuring device that can either sit in or near an incubator for the purpose of rapidly reading the OD of culture tubes within said incubator.
 
 #Prodject Abstract:
