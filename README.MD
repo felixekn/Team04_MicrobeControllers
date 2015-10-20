@@ -28,11 +28,10 @@ A device capable of quickly measuring the OD600 of a culture tube
 -  Analyze performance
   
 #Project Title: 
-**Rapid OD Detector (RODD)**
+**Rapid Optical Density Detector (RODD)**
 
 #Rough Project Description
 Develop a small optical density (OD) measuring device that can either sit in or near an incubator for the purpose of rapidly reading the OD600 of culture tubes containing bacteria to determine their growth phase.
 
-#Prodject Abstract:
+#Project Abstract:
 A ubiquitous synthetic biology protocol is to grow liquid cultures of cells in 14mL culture tubes within a large orbital shaker incubator to a desired optical density (OD) for various experimental reasons. The challenging and at times frustrating aspect of this protocol is quantifying when the cells have reached their desired density. Traditionally, researchers either pipette samples into cuvettes and read these on a large spectrophotometer or hold each culture tube up to a light source and estimate OD based on experience. The first approach does not scale well with increasing culture tubes while the latter approach is susceptible to large errors especially at low ODs (<0.1 OD 600nm). A solution to this problem is to develop a device that sits within or on the orbital incubator that can read the OD of liquid cultures while they're within their culture tubes. By using Beer's law, an Arduino, a couple of photo detectors, and a laser, the proposed OD measuring device will be able to accurately (+/- 0.1 OD 600nm) and rapidly read out culture tube OD for the purpose of quickly quantifying if a liquid cell culture has reached its desired OD.
-
