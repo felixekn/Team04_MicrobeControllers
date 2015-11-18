@@ -1,17 +1,19 @@
 
 #include <SoftwareSerial.h>
+#include <FreqCounter.h>
 
 SoftwareSerial Serial7Segment(7, 8); //RX pin, TX pin
 
-const long operationPeriod = 20000; //How long the device stays on [mds]
+const long operationPeriod = 60000; //How long the device stays on [ms]
 const long blankingPeriod = 1000;
-const long integrationPeriod = 10;
+const long integrationPeriod = 100;
 const long displayPeriod = 1000;
 int blankValue = 0; //in OD600 units
 boolean buttonActive = false;
 long operationTime = 2147483647;
 
 void setup() {
+  Serial.begin(19200);        // connect to the serial port
   initDisplayOD();
 }
 
@@ -70,7 +72,7 @@ double getOD() {
   for(int i=0; i<measurementNumber; i++){
     total += measurements[i]/1000.0;
   }
-  return total/measurementNumber;
+  return total/measurementNumber-blankValue;
 }
 
 void measureOD() {
@@ -81,8 +83,18 @@ void measureOD() {
   currentIndex++;
 }
 
+unsigned long frq;
+
 int readSensor(){
-  return random(-1000,1000)+500;
+    // wait if any serial is going on
+  FreqCounter::f_comp=10;   // Cal Value / Calibrate with professional Freq Counter
+  FreqCounter::start(integrationPeriod);  // 100 ms Gate Time
+
+  while (FreqCounter::f_ready == 0)
+ 
+  frq = FreqCounter::f_freq; 
+  Serial.println(frq);
+  return frq;
 }
 
 //Turns the laser on
@@ -135,4 +147,3 @@ void displayOD(double OD) {
   Serial7Segment.write(0x77);  // Decimal, colon, apostrophe control command
   Serial7Segment.write((byte) 2); // Turns on second decimal
 }
-
