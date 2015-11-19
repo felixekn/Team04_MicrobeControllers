@@ -10,7 +10,9 @@ const long integrationPeriod = 100;
 const long displayPeriod = 1000;
 int blankValue = 1; //in OD600 units
 boolean buttonActive = false;
-long operationTime = 2147483647;                                                                                       
+long operationTime = 2147483647;
+float measuredOD;                                                                                       
+float calibratedOD;
 
 void setup() {
   Serial.begin(19200);        // connect to the serial port
@@ -78,7 +80,11 @@ double getOD() {
   Serial.println("Getting OD");
   Serial.println(getMeasurement());
   Serial.println(blankValue);
-  return -log10(getMeasurement()/blankValue);
+  measuredOD = -log10(getMeasurement()/blankValue);
+  //calibration curve
+  calibratedOD = 1.191*measuredOD + 0.02099;
+  
+  return calibratedOD;
 }
 
 void measureOD() {
