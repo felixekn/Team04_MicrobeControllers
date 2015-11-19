@@ -1,16 +1,16 @@
-
+#include <math.h>
 #include <SoftwareSerial.h>
 #include <FreqCounter.h>
 
 SoftwareSerial Serial7Segment(7, 8); //RX pin, TX pin
 
-const long operationPeriod = 60000; //How long the device stays on [ms]
+const long operationPeriod = 600000; //How long the device stays on [ms]
 const long blankingPeriod = 1000;
 const long integrationPeriod = 100;
 const long displayPeriod = 1000;
-int blankValue = 0; //in OD600 units
+int blankValue = 1; //in OD600 units
 boolean buttonActive = false;
-long operationTime = 2147483647;
+long operationTime = 2147483647;                                                                                       
 
 void setup() {
   Serial.begin(19200);        // connect to the serial port
@@ -23,7 +23,7 @@ void loop() {
     Serial.println("Begin blanking mode");
     buttonActive = true;//Set button as active
     operationTime = 0;
-    blankValue = 0;//set blankValue to 0
+    blankValue = 1;//set blankValue to 0
     turnOnLaser();
     Serial7Segment.print("0000");
   }
@@ -35,7 +35,8 @@ void loop() {
   //If blanking period just ended
   if(operationTime >= blankingPeriod && operationTime < blankingPeriod + integrationPeriod){
     Serial.println("Ended blanking period");
-    blankValue = getOD();
+    blankValue = getMeasurement();
+    Serial.println(blankValue);
     Serial7Segment.print("    ");
   }
 
@@ -45,7 +46,6 @@ void loop() {
     displayOD(getOD());
   }
   if(operationTime<operationPeriod){
-    Serial.println("Measuring OD");
     measureOD();
   }
   //if operation just ended
@@ -59,7 +59,6 @@ void loop() {
   if(operationTime < operationPeriod + 2*integrationPeriod) {
     operationTime += integrationPeriod;
   }
-  delay(integrationPeriod);
 }
 
 const long measurementPeriod = displayPeriod; //Over how long of a period to average the output [ms]
@@ -67,12 +66,19 @@ const int measurementNumber = (int) (measurementPeriod/integrationPeriod); //Num
 int measurements[measurementNumber]; //This stores raw laser measurements
 int currentIndex = 0; //Current index used in measument array
 
-double getOD() {
-  double total = 0;
+double getMeasurement() {
+  long total = 0;
   for(int i=0; i<measurementNumber; i++){
-    total += measurements[i]/1000.0;
+    total += measurements[i];
   }
-  return total/measurementNumber-blankValue;
+  return total*1.0/measurementNumber;
+}
+
+double getOD() {
+  Serial.println("Getting OD");
+  Serial.println(getMeasurement());
+  Serial.println(blankValue);
+  return -log(getMeasurement()/blankValue)/log(10)*10;
 }
 
 void measureOD() {
@@ -93,7 +99,6 @@ int readSensor(){
   while (FreqCounter::f_ready == 0)
  
   frq = FreqCounter::f_freq; 
-  Serial.println(frq);
   return frq;
 }
 
