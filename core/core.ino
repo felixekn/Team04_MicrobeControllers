@@ -78,7 +78,7 @@ double getOD() {
   Serial.println("Getting OD");
   Serial.println(getMeasurement());
   Serial.println(blankValue);
-  return -log(getMeasurement()/blankValue)/log(10)*10;
+  return -log10(getMeasurement()/blankValue);
 }
 
 void measureOD() {
@@ -121,7 +121,6 @@ boolean buttonState() {
 }
 
 void initDisplayOD() {
-  Serial.begin(9600);
   Serial7Segment.begin(9600); //Talk to the Serial7Segment at 9600 bps
   Serial7Segment.write('v'); //Reset the display - this forces the cursor to return to the beginning of the display
 }
