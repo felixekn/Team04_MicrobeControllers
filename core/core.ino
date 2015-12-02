@@ -1,9 +1,11 @@
 #include <math.h>
 #include <SoftwareSerial.h>
-#include <FreqCounter.h>
+#include <FreqCounter.h> //http://interface.khm.de/index.php/lab/interfaces-advanced/arduino-frequency-counter-library/
 
-SoftwareSerial Serial7Segment(7, 8); //RX pin, TX pin
+SoftwareSerial Serial7Segment(7, 9); //RX pin, TX pin for LED display
 
+int LEDPin = 11;
+int buttonPin = 2;
 const long operationPeriod = 600000; //How long the device stays on [ms]
 const long blankingPeriod = 1000;
 const long integrationPeriod = 100;
@@ -11,11 +13,19 @@ const long displayPeriod = 1000;
 int blankValue = 1; //in OD600 units
 boolean buttonActive = false;
 long operationTime = 2147483647;
+double intensity;
 float measuredOD;                                                                                       
 float calibratedOD;
+const long measurementPeriod = displayPeriod; //Over how long of a period to average the output [ms]
+const int measurementNumber = (int) (measurementPeriod/integrationPeriod); //Number of measurements to average
+int measurements[measurementNumber]; //This stores raw laser measurements
+int currentIndex = 0; //Current index used in measument array
+unsigned long frq; //square wave pulse count through integration time
+
 
 void setup() {
-  Serial.begin(19200);        // connect to the serial port
+  Serial.begin(19200);// connect to the serial port
+  pinMode(LEDPin, OUTPUT);
   initDisplayOD();
 }
 
@@ -25,8 +35,7 @@ void loop() {
     Serial.println("Begin blanking mode");
     buttonActive = true;//Set button as active
     operationTime = 0;
-    blankValue = 1;//set blankValue to 0
-    turnOnLaser();
+    turnOnLED();
     Serial7Segment.print("0000");
   }
   //If button is not pressed
@@ -37,6 +46,15 @@ void loop() {
   //If blanking period just ended
   if(operationTime >= blankingPeriod && operationTime < blankingPeriod + integrationPeriod){
     Serial.println("Ended blanking period");
+    //HACK: throws away first 20 blank value while maintaing same display update
+    //      and detector reading patter to avoide incorrect blank value due to
+    //      information transfer interference
+    for (int i=0; i <= 2; i++) {
+      Serial7Segment.print("0000");
+      for (int k=0; k <= 10; k++) {
+        measureOD();
+      }
+    }
     blankValue = getMeasurement();
     Serial.println(blankValue);
     Serial7Segment.print("    ");
@@ -56,17 +74,12 @@ void loop() {
     //turn off display
     Serial7Segment.write('v');
     //turn off laser
-    turnOffLaser();
+    turnOffLED();
   }
   if(operationTime < operationPeriod + 2*integrationPeriod) {
     operationTime += integrationPeriod;
   }
 }
-
-const long measurementPeriod = displayPeriod; //Over how long of a period to average the output [ms]
-const int measurementNumber = (int) (measurementPeriod/integrationPeriod); //Number of measurements to average
-int measurements[measurementNumber]; //This stores raw laser measurements
-int currentIndex = 0; //Current index used in measument array
 
 double getMeasurement() {
   long total = 0;
@@ -78,13 +91,14 @@ double getMeasurement() {
 
 double getOD() {
   Serial.println("Getting OD");
-  Serial.println(getMeasurement());
+  intensity = getMeasurement();
+  Serial.println(intensity);
   Serial.println(blankValue);
-  measuredOD = -log10(getMeasurement()/blankValue);
+  measuredOD = -log10(intensity/blankValue);
   //calibration curve
   calibratedOD = 1.191*measuredOD + 0.02099;
   
-  return calibratedOD;
+  return measuredOD;
 }
 
 void measureOD() {
@@ -95,10 +109,9 @@ void measureOD() {
   currentIndex++;
 }
 
-unsigned long frq;
-
 int readSensor(){
-    // wait if any serial is going on
+  // Detector must be in pin 5 for arduino uno 
+  // wait if any serial is going on
   FreqCounter::f_comp=10;   // Cal Value / Calibrate with professional Freq Counter
   FreqCounter::start(integrationPeriod);  // 100 ms Gate Time
 
@@ -108,27 +121,28 @@ int readSensor(){
   return frq;
 }
 
-//Turns the laser on
-void turnOnLaser(){
-  
+
+void turnOnLED(){
+  digitalWrite(LEDPin, HIGH);
 }
-//Turns off the laser
-void turnOffLaser(){
-  
+
+void turnOffLED(){
+  digitalWrite(LEDPin, LOW);
 }
 
 void initButton(){
-  pinMode(2, INPUT);
+  pinMode(buttonPin, INPUT);
 }
 
-
 boolean buttonState() {
-  return digitalRead(2);
+  return digitalRead(buttonPin);
 }
 
 void initDisplayOD() {
   Serial7Segment.begin(9600); //Talk to the Serial7Segment at 9600 bps
   Serial7Segment.write('v'); //Reset the display - this forces the cursor to return to the beginning of the display
+  Serial7Segment.write(0x7A); // Brightness control
+  Serial7Segment.write((byte) 25); // set to 25/255
 }
 
 char tempString[100]; //Used for sprintf
