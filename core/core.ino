@@ -96,9 +96,10 @@ double getOD() {
   Serial.println(blankValue);
   measuredOD = -log10(intensity/blankValue);
   //calibration curve
-  calibratedOD = 1.191*measuredOD + 0.02099;
+//  calibratedOD = 1.191*measuredOD + 0.02099;
+  calibratedOD = 0.9449*measuredOD + 0.005323;
   
-  return measuredOD;
+  return calibratedOD;
 }
 
 void measureOD() {

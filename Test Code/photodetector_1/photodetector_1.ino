@@ -18,11 +18,13 @@ String action;
 char com[10];
 char val;
 int incomingByte = 0;
+int LEDPin = 11;
 
 void setup() {
   Serial.begin(19200);        // connect to the serial port
   Serial.println("Frequency Counter");
-
+  pinMode(LEDPin, OUTPUT);
+  digitalWrite(LEDPin, HIGH);
 }
 
 void ODMeasure() {
@@ -50,7 +52,7 @@ void loop() {
     action = "n";
   }
   ODMeasure();
-  delay(1000);
+  delay(100);
 }  
 
 
